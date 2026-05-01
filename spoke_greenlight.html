@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Spoke Greenlight</title>
+<title>Spoke Walk Signal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -69,50 +69,51 @@
   .signal {
     position: relative;
     z-index: 2;
-    width: min(420px, 86vw);
+    /* Size from viewport height so it fills a 4K TV nicely */
+    width: min(60vh, 92vw);
     background:
-      linear-gradient(180deg, #232326 0%, #1a1a1c 8%, #1a1a1c 92%, #050506 100%);
-    border-radius: 28px;
-    padding: 22px 22px 26px;
+      linear-gradient(180deg, #4a4a52 0%, #34343a 8%, #2e2e34 92%, #18181c 100%);
+    border-radius: 2.2vh;
+    padding: 1.8vh 1.8vh 2.2vh;
     box-shadow:
-      0 0 0 2px #000,
-      inset 0 2px 0 rgba(255,255,255,0.06),
-      inset 0 -2px 0 rgba(0,0,0,0.6),
-      0 30px 80px rgba(0,0,0,0.7),
-      0 8px 30px rgba(0,0,0,0.5);
+      0 0 0 0.25vh #000,
+      inset 0 0.2vh 0 rgba(255,255,255,0.12),
+      inset 0 -0.2vh 0 rgba(0,0,0,0.5),
+      0 3vh 8vh rgba(0,0,0,0.7),
+      0 1vh 3vh rgba(0,0,0,0.5);
   }
   .signal::before {
     content: "";
     position: absolute;
-    top: 8px; left: 50%;
+    top: 0.7vh; left: 50%;
     transform: translateX(-50%);
     width: 60%;
-    height: 4px;
+    height: 0.4vh;
     background: repeating-linear-gradient(90deg,
-      #050505 0 6px, transparent 6px 10px);
-    border-radius: 2px;
+      #050505 0 0.5vh, transparent 0.5vh 0.85vh);
+    border-radius: 0.2vh;
     opacity: 0.7;
   }
 
   .bolt {
     position: absolute;
-    width: 9px; height: 9px;
+    width: 0.85vh; height: 0.85vh;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #6a6a6e, #2a2a2d 60%, #0d0d0e);
-    box-shadow: inset 0 -1px 1px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05);
+    background: radial-gradient(circle at 30% 30%, #9a9a9e, #4a4a4d 60%, #1d1d1e);
+    box-shadow: inset 0 -0.1vh 0.1vh rgba(0,0,0,0.5), 0 0.1vh 0 rgba(255,255,255,0.08);
   }
-  .bolt.tl { top: 12px; left: 12px; }
-  .bolt.tr { top: 12px; right: 12px; }
-  .bolt.bl { bottom: 12px; left: 12px; }
-  .bolt.br { bottom: 12px; right: 12px; }
+  .bolt.tl { top: 1vh; left: 1vh; }
+  .bolt.tr { top: 1vh; right: 1vh; }
+  .bolt.bl { bottom: 1vh; left: 1vh; }
+  .bolt.br { bottom: 1vh; right: 1vh; }
 
   .stamp {
     position: absolute;
-    top: 14px; left: 50%; transform: translateX(-50%);
+    top: 1.2vh; left: 50%; transform: translateX(-50%);
     font-family: 'Inter', sans-serif;
-    font-size: 8px;
+    font-size: 0.85vh;
     letter-spacing: 0.3em;
-    color: #4a4a4d;
+    color: #7a7a7d;
     text-transform: uppercase;
     pointer-events: none;
   }
@@ -120,17 +121,17 @@
   .lamp {
     position: relative;
     aspect-ratio: 1 / 1;
-    border-radius: 18px;
+    border-radius: 1.5vh;
     background:
-      radial-gradient(circle at 50% 45%, #050505 0%, #000 70%),
-      #000;
+      radial-gradient(circle at 50% 45%, #0d0d0d 0%, #050505 70%),
+      #050505;
     box-shadow:
-      inset 0 0 0 4px #1f1f22,
-      inset 0 0 0 6px #050505,
-      inset 0 6px 18px rgba(0,0,0,0.9),
-      inset 0 -2px 6px rgba(255,255,255,0.03);
+      inset 0 0 0 0.35vh #2f2f33,
+      inset 0 0 0 0.55vh #0a0a0a,
+      inset 0 0.6vh 1.8vh rgba(0,0,0,0.9),
+      inset 0 -0.2vh 0.6vh rgba(255,255,255,0.04);
     overflow: hidden;
-    margin-top: 14px;
+    margin-top: 1.2vh;
   }
 
   .lamp::before {
@@ -171,17 +172,19 @@
 
   .phase-walk .pixel-img {
     filter:
-      drop-shadow(0 0 4px rgba(125, 255, 138, 0.85))
-      drop-shadow(0 0 14px rgba(77, 255, 90, 0.55))
-      drop-shadow(0 0 28px rgba(77, 255, 90, 0.35));
+      drop-shadow(0 0 0.5vh rgba(125, 255, 138, 0.95))
+      drop-shadow(0 0 1.6vh rgba(77, 255, 90, 0.7))
+      drop-shadow(0 0 3.2vh rgba(77, 255, 90, 0.45))
+      drop-shadow(0 0 5vh rgba(77, 255, 90, 0.25));
     animation: flicker 4.2s infinite steps(1);
   }
 
   .phase-stop .pixel-img {
     filter:
-      drop-shadow(0 0 4px rgba(255, 90, 58, 0.95))
-      drop-shadow(0 0 14px rgba(255, 58, 26, 0.7))
-      drop-shadow(0 0 30px rgba(255, 58, 26, 0.45));
+      drop-shadow(0 0 0.5vh rgba(255, 90, 58, 1))
+      drop-shadow(0 0 1.6vh rgba(255, 58, 26, 0.8))
+      drop-shadow(0 0 3.4vh rgba(255, 58, 26, 0.55))
+      drop-shadow(0 0 5vh rgba(255, 58, 26, 0.3));
     animation: pulse-red 1s infinite ease-in-out;
   }
 
@@ -213,23 +216,23 @@
     top: 0; left: 0; right: 0;
     height: 45%;
     background: linear-gradient(180deg,
-      rgba(255,255,255,0.07) 0%,
-      rgba(255,255,255,0.02) 60%,
+      rgba(255,255,255,0.10) 0%,
+      rgba(255,255,255,0.03) 60%,
       transparent 100%);
-    border-radius: 18px 18px 50% 50% / 18px 18px 30% 30%;
+    border-radius: 1.5vh 1.5vh 50% 50% / 1.5vh 1.5vh 30% 30%;
     pointer-events: none;
     z-index: 6;
   }
 
   .countdown {
-    margin-top: 16px;
-    background: radial-gradient(circle at 50% 40%, #0a0a0a, #000);
-    border-radius: 12px;
-    padding: 14px 0;
+    margin-top: 1.4vh;
+    background: radial-gradient(circle at 50% 40%, #141416, #050506);
+    border-radius: 1vh;
+    padding: 1.4vh 0;
     box-shadow:
-      inset 0 0 0 3px #1f1f22,
-      inset 0 0 0 5px #050505,
-      inset 0 4px 12px rgba(0,0,0,0.8);
+      inset 0 0 0 0.3vh #2f2f33,
+      inset 0 0 0 0.5vh #0a0a0a,
+      inset 0 0.4vh 1.2vh rgba(0,0,0,0.8);
     display: grid;
     place-items: center;
     position: relative;
@@ -239,39 +242,39 @@
     content: "";
     position: absolute; inset: 0;
     background: repeating-linear-gradient(0deg,
-      rgba(255,255,255,0.03) 0 1px, transparent 1px 3px);
+      rgba(255,255,255,0.04) 0 1px, transparent 1px 3px);
     pointer-events: none;
   }
   .digits {
     font-family: 'VT323', monospace;
-    font-size: 56px;
+    font-size: 7vh;
     line-height: 1;
-    letter-spacing: 4px;
+    letter-spacing: 0.5vh;
     font-variant-numeric: tabular-nums;
     transition: color 220ms ease, text-shadow 220ms ease;
   }
   .phase-walk .digits {
     color: var(--walk);
     text-shadow:
-      0 0 4px rgba(125, 255, 138, 0.9),
-      0 0 12px rgba(125, 255, 138, 0.6),
-      0 0 28px rgba(77, 255, 90, 0.4);
+      0 0 0.5vh rgba(125, 255, 138, 1),
+      0 0 1.5vh rgba(125, 255, 138, 0.75),
+      0 0 3.2vh rgba(77, 255, 90, 0.5);
   }
   .phase-stop .digits {
     color: var(--dont-walk);
     text-shadow:
-      0 0 4px rgba(255, 90, 58, 0.95),
-      0 0 12px rgba(255, 90, 58, 0.65),
-      0 0 28px rgba(255, 58, 26, 0.45);
+      0 0 0.5vh rgba(255, 90, 58, 1),
+      0 0 1.5vh rgba(255, 90, 58, 0.8),
+      0 0 3.2vh rgba(255, 58, 26, 0.55);
   }
 
   .walk-text {
     position: absolute;
-    bottom: 8%;
+    bottom: 6%;
     left: 50%;
     transform: translateX(-50%);
     font-family: 'VT323', monospace;
-    font-size: 13px;
+    font-size: 1.8vh;
     letter-spacing: 0.5em;
     z-index: 2;
     pointer-events: none;
@@ -279,19 +282,20 @@
   }
   .phase-walk .walk-text {
     color: var(--walk);
-    opacity: 0.55;
-    text-shadow: 0 0 6px rgba(125,255,138,0.7);
+    opacity: 0.65;
+    text-shadow: 0 0 0.8vh rgba(125,255,138,0.85);
   }
   .phase-stop .walk-text {
     color: var(--dont-walk);
-    opacity: 0.7;
-    text-shadow: 0 0 6px rgba(255,90,58,0.8);
+    opacity: 0.8;
+    text-shadow: 0 0 0.8vh rgba(255,90,58,0.95);
     letter-spacing: 0.35em;
   }
 
-  @media (max-width: 480px) {
-    .digits { font-size: 44px; }
-    .signal { padding: 18px 18px 22px; }
+  /* On portrait/narrow screens fall back to vw so it doesn't get tiny */
+  @media (max-aspect-ratio: 4/5) {
+    .signal { width: min(92vw, 80vh); }
+    .digits { font-size: 11vw; }
   }
 </style>
 </head>
