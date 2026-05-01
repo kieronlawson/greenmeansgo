@@ -381,9 +381,42 @@
     digits.textContent = String(remaining).padStart(2, '0');
   };
 
-  let t = 0;
-  render(t);
-  setInterval(() => { t += 1; render(t); }, 1000);
+  // Anchor ticks to wall-clock time so a brief tab suspension/discard doesn't
+  // reset the cycle — when the page resumes, we pick up at the correct frame.
+  const startedAt = Date.now();
+  const currentTick = () => Math.floor((Date.now() - startedAt) / 1000);
+
+  let lastRenderedTick = -1;
+  const renderIfChanged = () => {
+    const t = currentTick();
+    if (t !== lastRenderedTick) {
+      lastRenderedTick = t;
+      render(t);
+    }
+  };
+
+  renderIfChanged();
+  setInterval(renderIfChanged, 250);  // 4Hz check — much smoother than 1Hz against suspension
+
+  // Defence against Chrome kiosk auto-discarding "idle" tabs: keep a constant
+  // requestAnimationFrame loop running so the page never appears idle. Cheap
+  // because the body does nothing 99% of the time.
+  const heartbeat = () => {
+    renderIfChanged();
+    requestAnimationFrame(heartbeat);
+  };
+  requestAnimationFrame(heartbeat);
+
+  // If the tab does get hidden+restored, snap straight back to the right frame.
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) renderIfChanged(); });
+
+  // Request a screen wake lock so monitors don't sleep on TVs that respect it.
+  // Silently no-ops on browsers that don't support it.
+  if ('wakeLock' in navigator) {
+    const requestLock = () => navigator.wakeLock.request('screen').catch(() => {});
+    requestLock();
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) requestLock(); });
+  }
 </script>
 </body>
 </html>
