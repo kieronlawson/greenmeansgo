@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Spoke Walk Signal</title>
+<title>Spoke Talk Signal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -274,7 +274,7 @@
     left: 50%;
     transform: translateX(-50%);
     font-family: 'VT323', monospace;
-    font-size: 1.8vh;
+    font-size: 3.6vh;
     letter-spacing: 0.5em;
     z-index: 2;
     pointer-events: none;
@@ -350,12 +350,12 @@
       signal.classList.remove('phase-stop');
       signal.classList.add('phase-walk');
       img.src = `data:image/gif;base64,${GIFS[key]}`;
-      walkText.textContent = 'WALK';
+      walkText.textContent = 'TALK';
     } else {
       signal.classList.remove('phase-walk');
       signal.classList.add('phase-stop');
       img.src = `data:image/png;base64,${STANDS[key]}`;
-      walkText.textContent = "DON'T WALK";
+      walkText.textContent = "DON'T TALK";
     }
     digits.textContent = String(remaining).padStart(2, '0');
   };
