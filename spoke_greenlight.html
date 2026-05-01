@@ -70,7 +70,7 @@
     position: relative;
     z-index: 2;
     /* Size from viewport height so it fills a 4K TV nicely */
-    width: min(50vh, 82vw);
+    width: min(50vh, 92vw);
     background:
       linear-gradient(180deg, #4a4a52 0%, #34343a 8%, #2e2e34 92%, #18181c 100%);
     border-radius: 2.2vh;
@@ -270,26 +270,27 @@
 
   .walk-text {
     position: absolute;
-    bottom: 6%;
+    bottom: 5%;
     left: 50%;
     transform: translateX(-50%);
     font-family: 'VT323', monospace;
-    font-size: 1.8vh;
-    letter-spacing: 0.5em;
+    font-size: 3.2vh;
     z-index: 2;
     pointer-events: none;
+    white-space: nowrap;
     transition: color 220ms ease, text-shadow 220ms ease, opacity 220ms ease;
   }
   .phase-walk .walk-text {
     color: var(--walk);
-    opacity: 0.65;
-    text-shadow: 0 0 0.8vh rgba(125,255,138,0.85);
+    opacity: 0.7;
+    letter-spacing: 0.45em;
+    text-shadow: 0 0 1vh rgba(125,255,138,0.9);
   }
   .phase-stop .walk-text {
     color: var(--dont-walk);
-    opacity: 0.8;
-    text-shadow: 0 0 0.8vh rgba(255,90,58,0.95);
-    letter-spacing: 0.35em;
+    opacity: 0.85;
+    letter-spacing: 0.18em;
+    text-shadow: 0 0 1vh rgba(255,90,58,1);
   }
 
   /* On portrait/narrow screens fall back to vw so it doesn't get tiny */
@@ -317,7 +318,7 @@
           </div>
           <div class="matrix" aria-hidden="true"></div>
           <div class="glass" aria-hidden="true"></div>
-          <div id="walkText" class="walk-text">WALK</div>
+          <div id="walkText" class="walk-text">TALK</div>
         </div>
 
         <div class="countdown">
@@ -334,50 +335,55 @@
 
   const WALK_SECONDS = 23;
   const STOP_SECONDS = 10;
+  const PHASE_TICKS = (WALK_SECONDS + 1) + (STOP_SECONDS + 1);  // +1 for the 00 frame
+  const TOTAL_TICKS = PHASE_TICKS * KEYS.length;
 
   const signal = document.getElementById('signal');
   const img = document.getElementById('walker');
   const digits = document.getElementById('digits');
   const walkText = document.getElementById('walkText');
 
-  let keyIndex = 0;
-  let phase = 'walk';
-  let remaining = WALK_SECONDS;
+  // Preload all stand PNGs so the phase transition never stalls
+  Object.values(STANDS).forEach((b64) => { new Image().src = `data:image/png;base64,${b64}`; });
 
-  const render = () => {
-    const key = KEYS[keyIndex];
-    if (phase === 'walk') {
-      signal.classList.remove('phase-stop');
-      signal.classList.add('phase-walk');
-      img.src = `data:image/gif;base64,${GIFS[key]}`;
-      walkText.textContent = 'TALK';
-    } else {
-      signal.classList.remove('phase-walk');
-      signal.classList.add('phase-stop');
-      img.src = `data:image/png;base64,${STANDS[key]}`;
-      walkText.textContent = "DON'T TALK";
+  // Deterministic frame derivation — given an absolute tick, compute the
+  // (key, phase, remaining) we should be displaying. No accumulated state.
+  const frameAt = (t) => {
+    const offset = ((t % TOTAL_TICKS) + TOTAL_TICKS) % TOTAL_TICKS;
+    const key = KEYS[Math.floor(offset / PHASE_TICKS)];
+    const local = offset % PHASE_TICKS;
+    return local <= WALK_SECONDS
+      ? { key, phase: 'walk', remaining: WALK_SECONDS - local }
+      : { key, phase: 'stop', remaining: STOP_SECONDS - (local - WALK_SECONDS - 1) };
+  };
+
+  let lastKey = null;
+  let lastPhase = null;
+
+  const render = (t) => {
+    const { key, phase, remaining } = frameAt(t);
+    // Only touch DOM where it actually changed — avoids needless GIF reloads
+    if (phase !== lastPhase || key !== lastKey) {
+      if (phase === 'walk') {
+        signal.classList.remove('phase-stop');
+        signal.classList.add('phase-walk');
+        img.src = `data:image/gif;base64,${GIFS[key]}`;
+        walkText.textContent = 'TALK';
+      } else {
+        signal.classList.remove('phase-walk');
+        signal.classList.add('phase-stop');
+        img.src = `data:image/png;base64,${STANDS[key]}`;
+        walkText.textContent = "DON'T TALK";
+      }
+      lastKey = key;
+      lastPhase = phase;
     }
     digits.textContent = String(remaining).padStart(2, '0');
   };
 
-  const tick = () => {
-    remaining -= 1;
-    if (remaining < 0) {
-      if (phase === 'walk') {
-        phase = 'stop';
-        remaining = STOP_SECONDS;
-      } else {
-        // Completed a full walk->stop cycle: advance to next walker
-        phase = 'walk';
-        remaining = WALK_SECONDS;
-        keyIndex = (keyIndex + 1) % KEYS.length;
-      }
-    }
-    render();
-  };
-
-  render();
-  setInterval(tick, 1000);
+  let t = 0;
+  render(t);
+  setInterval(() => { t += 1; render(t); }, 1000);
 </script>
 </body>
 </html>
